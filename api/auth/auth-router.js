@@ -1,18 +1,37 @@
 const router = require('express').Router();
+const Auth = require('./auth-model')
+const bcrypt = require('bcryptjs');
+const Mw = require('./auth-middleware')
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+router.post('/register', Mw.checkUsername, Mw.checkCredentials, (req, res) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
     DO NOT EXCEED 2^8 ROUNDS OF HASHING!
 
     1- In order to register a new account the client must provide `username` and `password`:
-      {
-        "username": "Captain Marvel", // must not exist already in the `users` table
-        "password": "foobar"          // needs to be hashed before it's saved
-      }
+    {
+      "username": "Captain Marvel", // must not exist already in the `users` table
+      "password": "foobar"          // needs to be hashed before it's saved
+    }
+  */  
+  const credentials = req.body
+  const hash = bcrypt.hashSync(credentials.password, 14)
+  credentials.password = hash
 
+  Auth.register(credentials).then(user => {
+    if(credentials.username && credentials.password) {
+      return res.status(200).json({
+              id: user.id,
+              username: credentials.username,
+              password: hash
+    })}
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+  /*
     2- On SUCCESSFUL registration,
       the response body should have `id`, `username` and `password`:
       {
