@@ -4,15 +4,19 @@ function fetchUsers() {
     return db('users')
 }
 
-function fetchUser(id) {
+function fetchUserById(id) {
     return db('users').where('id', id).first()
+}
+
+function fetchUserByUsername(username) {
+    return db('users').where('username', username).first()
 }
 
 function register(credentials) {
 
     return db('users').insert(credentials)
         .then(id => {
-            return fetchUser(id)
+            return fetchUserById(id)
         })
         .catch(err => console.log(err))
 
@@ -20,5 +24,6 @@ function register(credentials) {
 
 module.exports = {
     register,
-    fetchUsers
+    fetchUsers,
+    fetchUserByUsername
 }
