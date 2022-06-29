@@ -50,7 +50,7 @@ router.post('/register', Mw.checkUsername, Mw.checkCredentials, (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', Mw.checkCredentials, (req, res) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
