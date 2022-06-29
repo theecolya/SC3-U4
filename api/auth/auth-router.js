@@ -18,7 +18,7 @@ router.post('/register', Mw.checkUsername, Mw.checkCredentials, (req, res) => {
     }
   */  
   const credentials = req.body
-  const hash = bcrypt.hashSync(credentials.password, 14)
+  const hash = bcrypt.hashSync(credentials.password, 5)
   credentials.password = hash
 
   Auth.register(credentials).then(user => {
